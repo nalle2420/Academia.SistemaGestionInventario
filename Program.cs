@@ -1,3 +1,4 @@
+using Academia.SistemaGestionInventario.WApi._Features.Sucursales;
 using Academia.SistemaGestionInventario.WApi.Infrastructure;
 using Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventario;
 using AutoMapper;
@@ -45,6 +46,9 @@ builder.Services.AddFsAuthService(configureOptions =>
     configureOptions.Username = builder.Configuration.GetFromENV("Configurations:FsIdentityServer:Username");
     configureOptions.Password = builder.Configuration.GetFromENV("Configurations:FsIdentityServer:Password");
 });
+
+builder.Services.AddTransient<SucursalService>();
+
 
 var app = builder.Build();
 
