@@ -1,4 +1,5 @@
 using Academia.SistemaGestionInventario.WApi.Infrastructure;
+using Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventario;
 using AutoMapper;
 using Farsiman.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +25,10 @@ builder.Services.AddCors(options =>
         builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
-var connectionString = builder.Configuration.GetConnectionString("EFCoreTransporte");
-//builder.Services.AddDbContext<TransporteDbContext>(opciones => opciones.UseSqlServer(connectionString));
-//builder.Services.AddTransient<UnitOfWorkBuilder, UnitOfWorkBuilder>();
+var connectionString = builder.Configuration.GetConnectionString("EFCoreGestionInventario");
+builder.Services.AddDbContext<GestionInventarioDbContext>(opciones => opciones.UseSqlServer(connectionString));
+
+builder.Services.AddTransient<UnitOfWorkBuilder, UnitOfWorkBuilder>();
 
 
 
