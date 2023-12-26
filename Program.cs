@@ -1,24 +1,63 @@
+using Academia.SistemaGestionInventario.WApi.Infrastructure;
+using AutoMapper;
+using Farsiman.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+var mapperConfig = new MapperConfiguration(m =>
+{
+    m.AddProfile(new MapProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+});
+
+var connectionString = builder.Configuration.GetConnectionString("EFCoreTransporte");
+//builder.Services.AddDbContext<TransporteDbContext>(opciones => opciones.UseSqlServer(connectionString));
+//builder.Services.AddTransient<UnitOfWorkBuilder, UnitOfWorkBuilder>();
+
+
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerForFsIdentityServer(opt =>
+{
+    opt.Title = "Proyecto Gestion de inventario";
+    opt.Description = "Proyecto para gestionar las salidas de inventario";
+    opt.Version = "v1.0";
+});
+
+builder.Services.AddFsAuthService(configureOptions =>
+{
+    configureOptions.Username = builder.Configuration.GetFromENV("Configurations:FsIdentityServer:Username");
+    configureOptions.Password = builder.Configuration.GetFromENV("Configurations:FsIdentityServer:Password");
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
+    app.UseSwaggerWithFsIdentityServer();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
+
+app.UseCors("AllowSpecificOrigin");
 
 app.MapControllers();
 

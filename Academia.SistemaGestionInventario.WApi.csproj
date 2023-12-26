@@ -8,7 +8,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Farsiman.Application.Core.Standard" Version="3.0.1" />
+    <PackageReference Include="Farsiman.AuthServer.Extensions" Version="1.0.35371" />
+    <PackageReference Include="Farsiman.Extensions.Configuration" Version="2.29723.0" />
+    <PackageReference Include="Farsiman.Infraestructure.Core.Entity.Standard" Version="8.0.60115" />
+    <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="kubernetes\" />
+    <Folder Include="Utility\" />
+    <Folder Include="_Features\" />
   </ItemGroup>
 
 </Project>
