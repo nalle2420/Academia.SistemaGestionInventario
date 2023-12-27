@@ -11,13 +11,13 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Permisos.Entities
 
         public bool Activo { get; set; }
 
-        public int CreadoPor { get; set; }
+        public int? CreadoPor { get; set; }
 
-        public DateTime CreadoEl { get; set; }
+        public DateTime? CreadoEl { get; set; }
 
-        public int ModificadoPor { get; set; }
+        public int? ModificadoPor { get; set; }
 
-        public DateTime ModificadoEl { get; set; }
+        public DateTime? ModificadoEl { get; set; }
 
         public virtual List<Perfil> Perfil { get; set; } = new List<Perfil>();
         public virtual List<PerfilPorPermiso> PerfilPorPermiso { get; set; } = new List<PerfilPorPermiso>();

@@ -1,4 +1,8 @@
+using Academia.SistemaGestionInventario.WApi._Features.Productos;
+using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes;
 using Academia.SistemaGestionInventario.WApi._Features.Sucursales;
+using Academia.SistemaGestionInventario.WApi.Domain.General;
+using Academia.SistemaGestionInventario.WApi.Domain.ProductoLote;
 using Academia.SistemaGestionInventario.WApi.Infrastructure;
 using Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventario;
 using AutoMapper;
@@ -29,6 +33,7 @@ builder.Services.AddCors(options =>
 var connectionString = builder.Configuration.GetConnectionString("EFCoreGestionInventario");
 builder.Services.AddDbContext<GestionInventarioDbContext>(opciones => opciones.UseSqlServer(connectionString));
 
+
 builder.Services.AddTransient<UnitOfWorkBuilder, UnitOfWorkBuilder>();
 
 
@@ -48,6 +53,14 @@ builder.Services.AddFsAuthService(configureOptions =>
 });
 
 builder.Services.AddTransient<SucursalService>();
+builder.Services.AddTransient<GeneralDomain>();
+builder.Services.AddTransient<ProductoLoteService>();
+builder.Services.AddTransient<ProductoService>();
+
+builder.Services.AddTransient<ProductoLoteDomain>();
+
+
+
 
 
 var app = builder.Build();

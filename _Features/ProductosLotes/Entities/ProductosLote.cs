@@ -19,13 +19,13 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes.Entiti
 
         public bool Activo { get; set; }
 
-        public int CreadoPor { get; set; }
+        public int? CreadoPor { get; set; }
 
-        public DateTime CreadoEl { get; set; }
+        public DateTime? CreadoEl { get; set; }
 
-        public int ModificadoPor { get; set; }
+        public int? ModificadoPor { get; set; }
 
-        public DateTime ModificadoEl { get; set; }
+        public DateTime? ModificadoEl { get; set; }
 
         public virtual Producto Producto { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using Academia.SistemaGestionInventario.WApi._Common;
 using Academia.SistemaGestionInventario.WApi._Features.Sucursales.Dtos;
 using Academia.SistemaGestionInventario.WApi._Features.Sucursales.Entities;
+using Academia.SistemaGestionInventario.WApi.Domain.General;
 using Academia.SistemaGestionInventario.WApi.Infrastructure;
 using Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventario;
 using AutoMapper;
@@ -15,12 +16,16 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Sucursales
         GestionInventarioDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        GeneralDomain _generalDomain;
 
-        public SucursalService(GestionInventarioDbContext context, UnitOfWorkBuilder unitOfWorkBuilder, IMapper mapper)
+
+        public SucursalService(GestionInventarioDbContext context, UnitOfWorkBuilder unitOfWorkBuilder, IMapper mapper, GeneralDomain generalDomain)
         {
             _context = context;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();
             _mapper = mapper;
+            _generalDomain = generalDomain;
+
 
 
         }
@@ -33,11 +38,19 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Sucursales
                sucursales= _unitOfWork.Repository<Sucursal>().AsQueryable()
                     .Where(sucursal => sucursal.Activo == true)
                     
-                    .Select(sucursal => new SucursalDto
+                    .Select(sucursalDato => new SucursalDto
                     {
-                        SucursalId = sucursal.SucursalId,
-                        Nombre = sucursal.Nombre
+                        SucursalId = sucursalDato.SucursalId,
+                        Nombre = sucursalDato.Nombre
                     }).ToList();
+
+                var ListaVacia = _generalDomain.ValidarListaNoEmpty(sucursales);
+
+                if (!ListaVacia.Ok)
+                {
+                    return Respuesta<List<SucursalDto>>.Fault(ListaVacia.Mensaje, ListaVacia.Mensaje, sucursales);
+
+                }
 
                 return Respuesta<List<SucursalDto>>.Success(sucursales);
 

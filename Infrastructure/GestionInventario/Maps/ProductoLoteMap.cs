@@ -14,7 +14,7 @@ namespace Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventari
             builder.Property(e => e.LoteId).HasColumnName("LoteID").IsRequired();
             builder.Property(e => e.CantidadInicial).HasColumnName("CantidadInicial").IsRequired();
             builder.Property(e => e.CostoUnidad).HasColumnName("CostoUnidad").HasColumnType("decimal(10, 2)").IsRequired();
-            builder.Property(e => e.FechaVencimiento).HasColumnType("date").HasColumnName("FechaVencimiento").IsRequired();
+            builder.Property(e => e.FechaVencimiento).HasColumnName("FechaVencimiento").IsRequired();
             builder.Property(e => e.Inventario).HasColumnName("Inventario").IsRequired();
             builder.Property(e => e.ProductoId).HasColumnName("ProductoID").IsRequired();
             builder.Property(e => e.Activo).HasColumnName("Activo").IsRequired();

@@ -14,9 +14,9 @@ namespace Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventari
             builder.Property(e => e.Nombre).HasColumnName("Nombre").HasMaxLength(50).IsRequired();
             builder.Property(e => e.Activo).HasColumnName("Activo").IsRequired();
             builder.Property(e => e.CreadoPor).HasColumnName("CreadoPor");
-            builder.Property(e => e.CreadoEl).HasColumnName("CreadoEl");
+            builder.Property(e => e.CreadoEl).HasColumnName("CreadoEl").HasColumnType("DateTime");
             builder.Property(e => e.ModificadoPor).HasColumnName("ModificadoPor");
-            builder.Property(e => e.ModificadoEl).HasColumnName("ModificadoEl");
+            builder.Property(e => e.ModificadoEl).HasColumnName("ModificadoEl").HasColumnType("DateTime");
 
 
         }

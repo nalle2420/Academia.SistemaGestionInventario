@@ -11,7 +11,7 @@ namespace Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventari
             builder.ToTable("Productos");
 
             builder.HasKey(e => e.ProductoId);
-            builder.Property(e => e.ProductoId).HasColumnName("ProductoID");
+            builder.Property(e => e.ProductoId).HasColumnName("ProductoId");
             builder.Property(e => e.Nombre).HasMaxLength(255).HasColumnName("Nombre").IsRequired();
             builder.Property(e => e.Activo).HasColumnName("Activo").IsRequired();
             builder.Property(e => e.CreadoPor).HasColumnName("CreadoPor");

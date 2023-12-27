@@ -11,7 +11,7 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Usuarios.Entities
 
         public string Nombre { get; set; }
 
-        public string Clave { get; set; }
+        public Byte[] Clave { get; set; }
 
         public int EmpleadoId { get; set; }
 
@@ -19,13 +19,13 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Usuarios.Entities
 
         public bool Activo {  get; set; }
 
-        public int CreadoPor {  get; set; }
+        public int? CreadoPor {  get; set; }
 
-        public DateTime CreadoEl {  get; set; }
+        public DateTime? CreadoEl {  get; set; }
 
-        public int ModificadoPor { get; set; }
+        public int? ModificadoPor { get; set; }
 
-        public DateTime ModificadoEl { get; set; }
+        public DateTime? ModificadoEl { get; set; }
 
         public virtual Empleado Empleado { get; set; } 
 
@@ -37,7 +37,6 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Usuarios.Entities
         public Usuario()
         {
             Nombre = string.Empty;
-            Clave = string.Empty;
 
         }
     }

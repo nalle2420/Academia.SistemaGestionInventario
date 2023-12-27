@@ -16,5 +16,7 @@
         public const string NO_INGRESOS = "No se puede realizar el ingreso ya que la sucursal sobrepasa el limite de salidas";
         public const string NO_ESTADO = "No se puede realizar la solicitud pues los productos ya fueron recibidos";
         public const string REPORT_EMPTY = "La sucursal no tiene asignada salidas de producto en estas fechas";
+        public const string PRODUCT_NOT_EXIST = "El producto seleccionado no existe";
+
     }
 }
