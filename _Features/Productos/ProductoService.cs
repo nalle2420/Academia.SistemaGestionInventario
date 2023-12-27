@@ -11,17 +11,14 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Productos
 {
     public class ProductoService
     {
-        GestionInventarioDbContext _context;
         GeneralDomain _generalDomain;
         private readonly IUnitOfWork _unitOfWork;
 
 
-        public ProductoService(UnitOfWorkBuilder unitOfWorkBuilder,GestionInventarioDbContext context, GeneralDomain generalDomain)
+        public ProductoService(UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain)
         {
-            _context = context;
             _generalDomain = generalDomain;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();
-
         }
 
         public Respuesta<List<ProductoDto>> BuscarProductos()

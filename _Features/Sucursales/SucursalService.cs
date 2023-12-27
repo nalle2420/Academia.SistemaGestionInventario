@@ -13,15 +13,13 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Sucursales
 {
     public class SucursalService
     {
-        GestionInventarioDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         GeneralDomain _generalDomain;
 
 
-        public SucursalService(GestionInventarioDbContext context, UnitOfWorkBuilder unitOfWorkBuilder, IMapper mapper, GeneralDomain generalDomain)
+        public SucursalService( UnitOfWorkBuilder unitOfWorkBuilder, IMapper mapper, GeneralDomain generalDomain)
         {
-            _context = context;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();
             _mapper = mapper;
             _generalDomain = generalDomain;

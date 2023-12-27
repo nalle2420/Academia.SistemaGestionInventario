@@ -17,27 +17,24 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
 {
     public class ProductoLoteService
     {
-        GestionInventarioDbContext _context;
         GeneralDomain _generalDomain;
-        ProductoLoteDomain _loteDomain;
+        ProductoLoteDomain _productoLoteDomain;
         private readonly IUnitOfWork _unitOfWork;
 
 
-        public ProductoLoteService(UnitOfWorkBuilder unitOfWorkBuilder,GestionInventarioDbContext context, GeneralDomain generalDomain, ProductoLoteDomain loteDomain)
+        public ProductoLoteService(UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, ProductoLoteDomain productoLoteDomain)
         {
-            _context = context;
             _generalDomain = generalDomain;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();
-            _loteDomain = loteDomain;
+            _productoLoteDomain = productoLoteDomain;
 
         }
 
         public Respuesta<List<ProductoLoteDto>> ObtenerLotesPorCantidad(ProductoLoteBuscarDto productoseleccionado)
         {
-            List<ProductoLoteDto> productosLoteDtos = new List<ProductoLoteDto>();
+            List<ProductoLoteDto> productosLoteDtos = new();
 
-
-            ProductLoteDtoValidator validator = new ProductLoteDtoValidator();
+            ProductLoteDtoValidator validator = new();
 
             ValidationResult validationResult = validator.Validate(productoseleccionado);
 
@@ -48,7 +45,7 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
                 return Respuesta.Fault<List<ProductoLoteDto>>(menssageValidation, CodigoError.CODIGO400);
             }
 
-            var productoDatos = _unitOfWork.Repository<Producto>().FirstOrDefault(u => u.ProductoId == productoseleccionado.ProductoId);
+            Producto productoDatos = _unitOfWork.Repository<Producto>().FirstOrDefault(u => u.ProductoId == productoseleccionado.ProductoId);
 
             if (productoDatos == null)
             {
@@ -57,7 +54,7 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
 
             int cantidadinventario = InventarioExistente(productoseleccionado.ProductoId);
 
-            var comprobarInventario = _loteDomain.ValidarCantidadSalida(productoseleccionado.Cantidad, cantidadinventario);
+            Respuesta<int> comprobarInventario = _productoLoteDomain.ValidarCantidadSalida(productoseleccionado.Cantidad, cantidadinventario);
 
             if (!comprobarInventario.Ok)
             {
@@ -67,12 +64,12 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
 
             int cantidadRestante = productoseleccionado.Cantidad;
 
-            var lotesDisponibles = _unitOfWork.Repository<ProductosLote>()
+            List<ProductosLote> lotesDisponibles = _unitOfWork.Repository<ProductosLote>()
                    .Where(pl => pl.ProductoId == productoseleccionado.ProductoId && pl.Inventario > 0)
                    .OrderBy(pl => pl.FechaVencimiento)
                    .ToList();
 
-            foreach (var lote in lotesDisponibles)
+            foreach (ProductosLote lote in lotesDisponibles)
             {
                 int cantidadAUtilizar = Math.Min(cantidadRestante, lote.Inventario);
                 if (cantidadAUtilizar > 0)
@@ -110,15 +107,13 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
             return Respuesta<List<ProductoLoteDto>>.Success(productosLoteDtos);
 
 
-
-
         }
 
         public int InventarioExistente(int idProduct)
         {
             int total = 0;
           
-                total = _context.ProductosLotes
+                total = _unitOfWork.Repository<ProductosLote>()
                 .Where(pl => pl.ProductoId == idProduct && pl.Inventario > 0)
                 .Sum(pl => pl.Inventario);
 
