@@ -1,8 +1,12 @@
 using Academia.SistemaGestionInventario.WApi._Features.Productos;
 using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes;
+using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario;
+using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Dtos;
+using Academia.SistemaGestionInventario.WApi._Features.SalidasInventarioDetalle;
 using Academia.SistemaGestionInventario.WApi._Features.Sucursales;
 using Academia.SistemaGestionInventario.WApi.Domain.General;
 using Academia.SistemaGestionInventario.WApi.Domain.ProductoLote;
+using Academia.SistemaGestionInventario.WApi.Domain.SalidaInvenario;
 using Academia.SistemaGestionInventario.WApi.Infrastructure;
 using Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventario;
 using AutoMapper;
@@ -56,6 +60,15 @@ builder.Services.AddTransient<SucursalService>();
 builder.Services.AddTransient<GeneralDomain>();
 builder.Services.AddTransient<ProductoLoteService>();
 builder.Services.AddTransient<ProductoService>();
+builder.Services.AddTransient<SalidaInventarioService>();
+builder.Services.AddTransient<SalidaInventarioDetalleService>();
+builder.Services.AddTransient<ProductoLoteDomain>();
+builder.Services.AddTransient<SalidaInventarioDomain>();
+
+
+
+
+
 
 builder.Services.AddTransient<ProductoLoteDomain>();
 

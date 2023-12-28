@@ -17,6 +17,12 @@
         public const string NO_ESTADO = "No se puede realizar la solicitud pues los productos ya fueron recibidos";
         public const string REPORT_EMPTY = "La sucursal no tiene asignada salidas de producto en estas fechas";
         public const string PRODUCT_NOT_EXIST = "El producto seleccionado no existe";
+        public const string USER_NOT_EXIST = "El usuario seleccionado no existe";
+        public const string SUCURSAL_NOT_EXIST = "La sucursal seleccionada no existe";
+        public const string LOTE_NOT_EXIST = "El lote seleccionado no existe";
+
+
+
 
     }
 }

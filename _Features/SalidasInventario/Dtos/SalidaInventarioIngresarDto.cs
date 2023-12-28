@@ -12,11 +12,8 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Dto
 
         public DateTime? Fecha { get; set; }
 
-        public decimal Total { get; set; }
+        public List<ProductoLoteDto> listaDetalleLotes { get; set; }
 
-        public DateTime? FechaRecibido { get; set; }
-
-        public int? UsuarioIdrecibe { get; set; }
 
     }
     public class SalidaInventarioValidator : AbstractValidator<SalidaInventarioIngresarDto>
@@ -27,8 +24,6 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Dto
                 .GreaterThan(0).WithMessage(Mensajes.FAIL_NONVALUE_ZERO);
             RuleFor(v => v.UsuarioId)
                .GreaterThan(0).WithMessage(Mensajes.FAIL_NONVALUE_ZERO);
-            RuleFor(v => v.Total)
-              .GreaterThan(0).WithMessage(Mensajes.FAIL_NONVALUE_ZERO);
         }
 
 

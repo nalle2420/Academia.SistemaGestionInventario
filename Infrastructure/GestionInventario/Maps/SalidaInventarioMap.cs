@@ -16,8 +16,8 @@ namespace Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventari
             builder.Property(e => e.EstadoId).HasColumnName("EstadoId");
             builder.Property(e => e.FechaSalida).HasColumnType("date").HasColumnName("Fecha");
             builder.Property(e => e.SucursalId).HasColumnName("SucursalId");
-            builder.Property(e => e.Total).HasColumnType("decimal(10,2)");
-            builder.Property(e => e.FechaRecibido).HasColumnType("date").IsRequired(false);
+            builder.Property(e => e.Total).HasColumnType("decimal(10,2)").HasColumnName("Total");
+            builder.Property(e => e.FechaRecibido).HasColumnType("date").IsRequired(false).HasColumnName("FechaRecibido");
             builder.Property(e => e.UsuarioIdRecibe).HasColumnName("UsuarioIdRecibe").IsRequired(false);
             builder.Property(e => e.Activo).HasColumnName("Activo").IsRequired();
             builder.Property(e => e.CreadoPor).HasColumnName("CreadoPor");

@@ -6,6 +6,7 @@ using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes.Entities;
 using Academia.SistemaGestionInventario.WApi._Features.Usuarios.Entities;
 using Academia.SistemaGestionInventario.WApi.Domain.General;
 using Academia.SistemaGestionInventario.WApi.Domain.ProductoLote;
+using Academia.SistemaGestionInventario.WApi.Domain.SalidaInvenario;
 using Academia.SistemaGestionInventario.WApi.Infrastructure;
 using Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventario;
 using Farsiman.Application.Core.Standard.DTOs;
@@ -20,13 +21,34 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
         GeneralDomain _generalDomain;
         ProductoLoteDomain _productoLoteDomain;
         private readonly IUnitOfWork _unitOfWork;
+        SalidaInventarioDomain _salidaInventarioDomain;
 
 
-        public ProductoLoteService(UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, ProductoLoteDomain productoLoteDomain)
+        public ProductoLoteService(UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, ProductoLoteDomain productoLoteDomain, SalidaInventarioDomain salidaInventarioDomain)
         {
             _generalDomain = generalDomain;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();
             _productoLoteDomain = productoLoteDomain;
+            _salidaInventarioDomain = salidaInventarioDomain;
+
+        }
+
+        public Respuesta<bool> DisminuirInventarioPorSalidaASucursal(int LoteId,int cantidad)
+        {
+
+           ProductosLote loteSeleccionado = _unitOfWork.Repository<ProductosLote>().FirstOrDefault(lote => lote.LoteId == LoteId)?? new ProductosLote();
+
+           Respuesta<decimal> validacionTarifa= _salidaInventarioDomain.VerificarTarifa(cantidad, loteSeleccionado.Inventario);
+            if (!validacionTarifa.Ok)
+            {
+                return Respuesta<bool>.Fault(validacionTarifa.Mensaje, validacionTarifa.Codigo, false);
+            }
+
+            loteSeleccionado.Inventario -= cantidad;
+
+            return Respuesta<bool>.Success(true);
+
+
 
         }
 
@@ -116,7 +138,6 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
                 total = _unitOfWork.Repository<ProductosLote>()
                 .Where(pl => pl.ProductoId == idProduct && pl.Inventario > 0)
                 .Sum(pl => pl.Inventario);
-
 
                 return total;
 
