@@ -2,6 +2,8 @@
 using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Dtos;
 using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Entities;
 using Academia.SistemaGestionInventario.WApi._Features.SalidasInventarioDetalle.Entities;
+using Academia.SistemaGestionInventario.WApi._Features.Usuarios.Dtos;
+using Academia.SistemaGestionInventario.WApi._Features.Usuarios.Entities;
 using AutoMapper;
 
 namespace Academia.SistemaGestionInventario.WApi.Infrastructure
@@ -18,6 +20,14 @@ namespace Academia.SistemaGestionInventario.WApi.Infrastructure
 
             CreateMap<ProductoLoteDto,SalidaInventarioDetalle>().ForMember(d => d.LoteId, o => o.MapFrom(s => s.LoteId))
                 .ForMember(d => d.CantidadProducto, o => o.MapFrom(s => s.Cantidad));
+
+            CreateMap<Usuario, UsuarioDto>();
+            CreateMap<UsuarioDto, Usuario>();
+
+            CreateMap<SalidaInventario, SalidaInventarioDto>();
+            CreateMap<SalidaInventarioDto, SalidaInventario>();
+
+
 
 
 

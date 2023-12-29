@@ -6,10 +6,10 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SucursalControllers : ControllerBase
+    public class SucursalController : ControllerBase
     {
         private readonly SucursalService _serviceSucursal;
-        public SucursalControllers(SucursalService sucursalService)
+        public SucursalController(SucursalService sucursalService)
         {
             _serviceSucursal = sucursalService;
 

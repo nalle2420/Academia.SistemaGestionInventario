@@ -5,11 +5,11 @@ namespace Academia.SistemaGestionInventario.WApi._Features.PerfilesPorPermisos.E
 {
     public class PerfilPorPermiso
     {                                                                                                 
-        public int PerfilId { get; set; }
+        public int? PerfilId { get; set; }
 
-        public int PermisoId { get; set; }
+        public int? PermisoId { get; set; }
 
-        public bool Activo { get; set; }
+        public bool? Activo { get; set; }
                                                                    
         public int? CreadoPor { get; set; }
 

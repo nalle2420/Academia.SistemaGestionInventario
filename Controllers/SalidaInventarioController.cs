@@ -27,6 +27,16 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
 
         }
 
+        [HttpPut]
+        [Route("ActualizarEstado")]
+        public IActionResult ActualizarEstadoSalida([FromBody] SalidaEditEstadoDto salidaAEditar)
+        {
+
+            var resultado = _serviceSalidaInventario.EditarEstado(salidaAEditar);
+            return Ok(resultado);
+
+        }
+
         [HttpGet]
         [Route("listado")]
 

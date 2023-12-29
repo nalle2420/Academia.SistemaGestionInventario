@@ -5,11 +5,11 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Permisos.Entities
 {
     public class Permiso
     {
-        public int PermisoId { get; set; }
+        public int? PermisoId { get; set; }
 
-        public string PermisoNombre { get; set; }
+        public string? PermisoNombre { get; set; }
 
-        public bool Activo { get; set; }
+        public bool? Activo { get; set; }
 
         public int? CreadoPor { get; set; }
 

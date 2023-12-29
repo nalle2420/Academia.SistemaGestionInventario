@@ -61,7 +61,7 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario
             }
         }
 
-        public Respuesta<bool> ValidarExistenciaDatosSalida(SalidaInventarioIngresarDto salidaInventario)
+        private Respuesta<bool> ValidarExistenciaDatosSalida(SalidaInventarioIngresarDto salidaInventario)
         {
             SalidaInventarioValidator validator = new();
 
@@ -74,19 +74,19 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario
                 return Respuesta.Fault<bool>(menssageValidation, CodigoError.CODIGO400);
             }
 
-
-            bool usuarioExistente = _unitOfWork.Repository<Usuario>().AsQueryable().Any(e => e.UsuarioId == salidaInventario.UsuarioId);
-            if (!usuarioExistente)
+            Respuesta<Usuario> validarUsuarioExiste = _generalDomain.validarUsuario(buscarUsuario(salidaInventario.UsuarioId));
+            if (!validarUsuarioExiste.Ok)
             {
-               return Respuesta<bool>.Fault(Mensajes.USER_NOT_EXIST+salidaInventario.UsuarioId, CodigoError.CODIGO400, false);
-            }
-            bool sucursalExistente = _unitOfWork.Repository<Sucursal>().AsQueryable().Any(e => e.SucursalId == salidaInventario.SucursalId);
+                return Respuesta<bool>.Fault(validarUsuarioExiste.Mensaje, validarUsuarioExiste.Codigo, false);
 
-            if (!sucursalExistente)
-            {
-               return Respuesta<bool>.Fault(Mensajes.SUCURSAL_NOT_EXIST, CodigoError.CODIGO400, false);
             }
 
+            Respuesta<Sucursal> validarSucursalExiste = _salidaInventarioDomain.validadSucursal(buscarSucursal(salidaInventario.SucursalId));
+            if (!validarSucursalExiste.Ok)
+            {
+                return Respuesta<bool>.Fault(validarSucursalExiste.Mensaje, validarSucursalExiste.Codigo, false);
+
+            }
             return Respuesta<bool>.Success(true);
 
         }
@@ -154,18 +154,74 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario
             }
 
 
-        } 
+        }
+        public Respuesta<SalidaInventarioDto> EditarEstado(SalidaEditEstadoDto editestado)
+        {
+            SalidaInventario? salidaeditada = buscarSalida(editestado.SalidaInventarioId);
+            SalidaInventarioDto salidaeditadaDto = new SalidaInventarioDto();
+
+            try
+            {
+                Respuesta<SalidaInventario> validarSalidaExiste = _salidaInventarioDomain.validadSalida(salidaeditada);
+                if (!validarSalidaExiste.Ok)
+                {
+                    return Respuesta<SalidaInventarioDto>.Fault(validarSalidaExiste.Mensaje, validarSalidaExiste.Codigo, salidaeditadaDto);
+
+                }
+                Respuesta<Usuario> validarUsuarioExiste = _generalDomain.validarUsuario(buscarUsuario(editestado.UsuarioIdrecibe));
+                if (!validarUsuarioExiste.Ok)
+                {
+                    return Respuesta<SalidaInventarioDto>.Fault(validarUsuarioExiste.Mensaje, validarUsuarioExiste.Codigo, salidaeditadaDto);
+
+                }
+                salidaeditada.EstadoId = ((int)ListEstados.Recibido);
+                salidaeditada.FechaRecibido = DateTime.Now;
+                salidaeditada.UsuarioIdRecibe = editestado.UsuarioIdrecibe;
+                salidaeditada.ModificadoPor= editestado.UsuarioIdrecibe;
+                salidaeditada.ModificadoEl= DateTime.Now;
+
+                _unitOfWork.SaveChanges();
+                salidaeditadaDto = _mapper.Map<SalidaInventarioDto>(salidaeditada);
+
+                return Respuesta<SalidaInventarioDto>.Success(salidaeditadaDto);
+
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Editar salida" + ex);
+                return Respuesta<SalidaInventarioDto>.Fault(Mensajes.ERROR_AL_BUSCAR, CodigoError.CODIGO500, salidaeditadaDto);
+            }
+        }
+
+
 
         public Respuesta<List<SalidaListadoDto>> ListadoSalidasInventario(DateTime fechaInicio, DateTime fechaFinal, int sucursalID)
         {
             List<SalidaListadoDto> listaSalida = new List<SalidaListadoDto>();
+            Respuesta<bool> validarFechas = _salidaInventarioDomain.ValidarFechas(fechaInicio,fechaFinal);
+
+            if (!validarFechas.Ok)
+            {
+                return Respuesta<List<SalidaListadoDto>>.Fault(validarFechas.Mensaje, validarFechas.Codigo, listaSalida);
+
+            }
+            Respuesta<Sucursal> validarSucursalExiste = _salidaInventarioDomain.validadSucursal(buscarSucursal(sucursalID));
+            if (!validarSucursalExiste.Ok)
+            {
+                return Respuesta<List<SalidaListadoDto>>.Fault(validarSucursalExiste.Mensaje, validarSucursalExiste.Codigo, listaSalida);
+
+            }
+
             try
             {
                 listaSalida = (from Salida in _unitOfWork.Repository<SalidaInventario>().AsQueryable()
                               join Detalle in _unitOfWork.Repository<SalidaInventarioDetalle>().AsQueryable() on Salida.SalidaInventarioId equals Detalle.SalidaInventarioId into detallesGrupo
                               join estado in _unitOfWork.Repository<Estado>().AsQueryable() on Salida.EstadoId equals estado.EstadoId
-                            join usuario in _unitOfWork.Repository<Usuario>().AsQueryable() on Salida.UsuarioIdRecibe equals usuario.UsuarioId
-                            join empleado in _unitOfWork.Repository<Empleado>().AsQueryable() on usuario.EmpleadoId equals empleado.EmpleadoId
+                            join usuario in _unitOfWork.Repository<Usuario>().AsQueryable() on Salida.UsuarioIdRecibe equals usuario.UsuarioId into usuarios
+                            from usuario in usuarios.DefaultIfEmpty()
+                            join empleado in _unitOfWork.Repository<Empleado>().AsQueryable() on usuario.EmpleadoId equals empleado.EmpleadoId into empleados
+                            from empleado in empleados.DefaultIfEmpty()
                               join sucursal in _unitOfWork.Repository<Sucursal>().AsQueryable() on Salida.SucursalId equals sucursal.SucursalId
                                where Salida.FechaSalida >= fechaInicio
                                && Salida.FechaSalida <= fechaFinal
@@ -179,7 +235,7 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario
                                   Cantidad = detallesGrupo.Sum(d => d.CantidadProducto),
                                    Total = Salida.Total,
                                   FechaRecibido = Salida.FechaRecibido,
-                                   Empleadorecibe= empleado.Nombre,
+                                   Empleadorecibe= empleado != null ? (empleado.Nombre+" "+ empleado.Apellido) : null,
                                   Estado = estado.EstadoNombre
                                }
                               ).ToList();
@@ -195,5 +251,11 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario
                 return Respuesta<List<SalidaListadoDto>>.Fault(Mensajes.ERROR_AL_BUSCAR, CodigoError.CODIGO500, listaSalida);
             }
         }
+
+        public Sucursal? buscarSucursal(int idSucursal) => _unitOfWork.Repository<Sucursal>().AsQueryable().FirstOrDefault(e => e.SucursalId == idSucursal);
+        public Usuario? buscarUsuario(int idUsuario) => _unitOfWork.Repository<Usuario>().AsQueryable().FirstOrDefault(e => e.UsuarioId == idUsuario);
+
+        public SalidaInventario? buscarSalida(int idSalida) => _unitOfWork.Repository<SalidaInventario>().AsQueryable().FirstOrDefault(e => e.SalidaInventarioId == idSalida);
+
     }
 }

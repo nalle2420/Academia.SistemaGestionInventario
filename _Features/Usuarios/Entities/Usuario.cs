@@ -29,7 +29,7 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Usuarios.Entities
 
         public virtual Empleado Empleado { get; set; } 
 
-        public virtual Perfil Perfil { get; set; }
+        public virtual Perfil? Perfil { get; set; }
 
         public virtual List<SalidaInventario> SalidaInventario { get; set; } = new List<SalidaInventario>();
 

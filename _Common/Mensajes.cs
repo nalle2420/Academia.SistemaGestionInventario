@@ -20,6 +20,15 @@
         public const string USER_NOT_EXIST = "El usuario seleccionado no existe";
         public const string SUCURSAL_NOT_EXIST = "La sucursal seleccionada no existe";
         public const string LOTE_NOT_EXIST = "El lote seleccionado no existe";
+        public const string SALIDA_INVENTARIO_NOT_EXIST = "La salida de inventario seleccionada no existe";
+
+
+        public const string FAIL_DATE_INITIAL = "La fecha inicial no puede ser mayor que la fecha final";
+        public const string FAIL_DATE = "Las fechas inicial y final son requeridas";
+
+        public const string FAIL_DATE_INITIAL_TODAY = "La fecha inicial no puede ser mayor la fecha de hoy";
+
+
 
 
 
