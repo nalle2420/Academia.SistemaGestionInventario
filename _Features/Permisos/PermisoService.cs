@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Academia.SistemaGestionInventario.WApi._Features.Permisos
 {
-    public class PermisoService
+    public class PermisoService: IPermisoServices
     {
         GeneralDomain _generalDomain;
         private readonly IUnitOfWork _unitOfWork;

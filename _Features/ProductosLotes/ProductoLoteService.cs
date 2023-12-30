@@ -3,12 +3,15 @@ using Academia.SistemaGestionInventario.WApi._Features.Productos;
 using Academia.SistemaGestionInventario.WApi._Features.Productos.Entities;
 using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes.Dtos;
 using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes.Entities;
+using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Dtos;
+using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Entities;
 using Academia.SistemaGestionInventario.WApi._Features.Usuarios.Entities;
 using Academia.SistemaGestionInventario.WApi.Domain.General;
 using Academia.SistemaGestionInventario.WApi.Domain.ProductoLote;
 using Academia.SistemaGestionInventario.WApi.Domain.SalidaInvenario;
 using Academia.SistemaGestionInventario.WApi.Infrastructure;
 using Academia.SistemaGestionInventario.WApi.Infrastructure.GestionInventario;
+using AutoMapper;
 using Farsiman.Application.Core.Standard.DTOs;
 using Farsiman.Domain.Core.Standard.Repositories;
 using FluentValidation.Results;
@@ -16,20 +19,24 @@ using FluentValidation.Results;
 
 namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
 {
-    public class ProductoLoteService
+    public class ProductoLoteService: IProductoLoteService
     {
         GeneralDomain _generalDomain;
         ProductoLoteDomain _productoLoteDomain;
         private readonly IUnitOfWork _unitOfWork;
         SalidaInventarioDomain _salidaInventarioDomain;
+        private readonly IMapper _mapper;
 
 
-        public ProductoLoteService(UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, ProductoLoteDomain productoLoteDomain, SalidaInventarioDomain salidaInventarioDomain)
+
+        public ProductoLoteService(IMapper mapper,UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, ProductoLoteDomain productoLoteDomain, SalidaInventarioDomain salidaInventarioDomain)
         {
             _generalDomain = generalDomain;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();
             _productoLoteDomain = productoLoteDomain;
             _salidaInventarioDomain = salidaInventarioDomain;
+            _mapper = mapper;
+
 
         }
 
@@ -52,6 +59,78 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
 
         }
 
+        private Respuesta<bool> ValidarDatos(ProductoLoteIngresarDto productoLoteNuevo)
+        {
+            Respuesta<DateTime> comprobarFechaVencimiento = _productoLoteDomain.ValidarFechaVencimiento(productoLoteNuevo.FechaVencimiento);
+
+            if (!comprobarFechaVencimiento.Ok)
+            {
+                return Respuesta<bool>.Fault(comprobarFechaVencimiento.Mensaje, comprobarFechaVencimiento.Codigo, false);
+
+            }
+            Producto productoDatos = ProductoExiste(productoLoteNuevo.ProductoId);
+
+            Respuesta<Producto> comprobarProducto = _productoLoteDomain.validarproducto(productoDatos);
+
+
+            if (!comprobarProducto.Ok)
+            {
+                return Respuesta<bool>.Fault(comprobarProducto.Mensaje, comprobarProducto.Codigo, false);
+
+            }
+            return Respuesta<bool>.Success(true);
+
+
+        }
+        public Respuesta<ProductoLoteMostrarDto> IngresarNuevoLoteProductos(ProductoLoteIngresarDto productoLoteNuevo)
+        {
+            ProductosLote nuevoLote = new();
+            ProductoLoteMostrarDto productoLoteMostrarDto = new();
+
+            try
+            {
+                ProductLoteIngresarDtoValidator validator = new();
+
+                ValidationResult validationResult = validator.Validate(productoLoteNuevo);
+
+                if (!validationResult.IsValid)
+                {
+                    IEnumerable<string> errores = validationResult.Errors.Select(s => s.ErrorMessage);
+                    string menssageValidation = string.Join(", ", errores);
+                    return Respuesta.Fault<ProductoLoteMostrarDto>(menssageValidation, CodigoError.CODIGO400);
+                }
+
+                Respuesta<bool> validacionDatos = ValidarDatos(productoLoteNuevo);
+                if (!validacionDatos.Ok)
+                {
+                    return Respuesta.Fault<ProductoLoteMostrarDto>(validacionDatos.Mensaje, CodigoError.CODIGO400);
+
+                }
+
+                nuevoLote = _mapper.Map<ProductosLote>(productoLoteNuevo);
+                nuevoLote.Activo = true;
+                nuevoLote.Inventario = nuevoLote.CantidadInicial;
+                nuevoLote.CreadoPor = 3;
+                nuevoLote.CreadoEl = DateTime.Now;
+
+                _unitOfWork.Repository<ProductosLote>().Add(nuevoLote);
+                _unitOfWork.SaveChanges();
+
+                productoLoteMostrarDto = _mapper.Map<ProductoLoteMostrarDto>(nuevoLote);
+
+
+                return Respuesta<ProductoLoteMostrarDto>.Success(productoLoteMostrarDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Agregar Lote" + ex);
+                return Respuesta<ProductoLoteMostrarDto>.Fault(Mensajes.ERROR_AL_BUSCAR, CodigoError.CODIGO500, productoLoteMostrarDto);
+            }
+
+        }
+
+        private Producto ProductoExiste(int idProducto)=> _unitOfWork.Repository<Producto>().FirstOrDefault(u => u.ProductoId == idProducto);
+
         public Respuesta<List<ProductoLoteDto>> ObtenerLotesPorCantidad(ProductoLoteBuscarDto productoseleccionado)
         {
             List<ProductoLoteDto> productosLoteDtos = new();
@@ -67,7 +146,7 @@ namespace Academia.SistemaGestionInventario.WApi._Features.ProductosLotes
                 return Respuesta.Fault<List<ProductoLoteDto>>(menssageValidation, CodigoError.CODIGO400);
             }
 
-            Producto productoDatos = _unitOfWork.Repository<Producto>().FirstOrDefault(u => u.ProductoId == productoseleccionado.ProductoId);
+            Producto productoDatos = ProductoExiste(productoseleccionado.ProductoId);
 
             if (productoDatos == null)
             {

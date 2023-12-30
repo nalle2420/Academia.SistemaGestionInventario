@@ -9,10 +9,10 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
     [ApiController]
     public class ProductoController : ControllerBase
     {
-        private readonly ProductoService _serviceProducto;
+        private readonly IProductoService _serviceProducto;
 
 
-        public ProductoController(ProductoService serviceProducto)
+        public ProductoController(IProductoService serviceProducto)
         {
             _serviceProducto = serviceProducto;
         }

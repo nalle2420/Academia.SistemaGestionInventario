@@ -13,14 +13,14 @@ using Farsiman.Domain.Core.Standard.Repositories;
 
 namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventarioDetalle
 {
-    public class SalidaInventarioDetalleService
+    public class SalidaInventarioDetalleService: ISalidaInventarioDetalleService
     {
         GeneralDomain _generalDomain;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        ProductoLoteService _productoLoteService;
+        IProductoLoteService _productoLoteService;
 
-        public SalidaInventarioDetalleService(UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, IMapper mapper, ProductoLoteService productoLoteService)
+        public SalidaInventarioDetalleService(UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, IMapper mapper, IProductoLoteService productoLoteService)
         {
             _generalDomain = generalDomain;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();

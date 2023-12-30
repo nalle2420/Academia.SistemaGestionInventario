@@ -10,9 +10,9 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
     [ApiController]
     public class ProductoLoteController : ControllerBase
     {
-        private readonly ProductoLoteService _serviceLote;
+        private readonly IProductoLoteService _serviceLote;
 
-        public ProductoLoteController(ProductoLoteService serviceLote)
+        public ProductoLoteController(IProductoLoteService serviceLote)
         {
             _serviceLote = serviceLote;
         }
@@ -26,6 +26,16 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
             productoSeleccionado.ProductoId = productoId;
             productoSeleccionado.Cantidad= Cantidad;
             var resultado = _serviceLote.ObtenerLotesPorCantidad(productoSeleccionado);
+            return Ok(resultado);
+
+        }
+
+        [HttpPost]
+        [Route("Agregar")]
+        public IActionResult AgregarProductoLote([FromBody] ProductoLoteIngresarDto nuevoLote)
+        {
+          
+            var resultado = _serviceLote.IngresarNuevoLoteProductos(nuevoLote);
             return Ok(resultado);
 
         }

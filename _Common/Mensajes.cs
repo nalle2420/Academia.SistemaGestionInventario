@@ -25,6 +25,8 @@
 
         public const string FAIL_DATE_INITIAL = "La fecha inicial no puede ser mayor que la fecha final";
         public const string FAIL_DATE = "Las fechas inicial y final son requeridas";
+        public const string FAIL_FECHAVENCIMIENTO = "No se puede ingresar productos vencidos";
+
 
         public const string FAIL_DATE_INITIAL_TODAY = "La fecha inicial no puede ser mayor la fecha de hoy";
 

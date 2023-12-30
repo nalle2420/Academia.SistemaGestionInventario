@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Academia.SistemaGestionInventario.WApi._Features.Usuarios
 {
-    public class UsuarioService
+    public class UsuarioService: IUsuarioService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -40,11 +40,9 @@ namespace Academia.SistemaGestionInventario.WApi._Features.Usuarios
             }
         }
 
-
-
      
 
-        public Usuario? buscarUsuario(string usuarioNombre) => _unitOfWork.Repository<Usuario>().AsQueryable().FirstOrDefault(e => e.Nombre == usuarioNombre);
+        private Usuario? buscarUsuario(string usuarioNombre) => _unitOfWork.Repository<Usuario>().AsQueryable().FirstOrDefault(e => e.Nombre == usuarioNombre);
 
 
         public Respuesta<UsuarioDto> ObtenerUsuarioPorUsuarioYClave(UsuarioCredencialesDto credencialesUsuario)

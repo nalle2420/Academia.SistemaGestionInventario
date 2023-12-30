@@ -9,7 +9,7 @@ using Farsiman.Domain.Core.Standard.Repositories;
 
 namespace Academia.SistemaGestionInventario.WApi._Features.Productos
 {
-    public class ProductoService
+    public class ProductoService: IProductoService
     {
         GeneralDomain _generalDomain;
         private readonly IUnitOfWork _unitOfWork;

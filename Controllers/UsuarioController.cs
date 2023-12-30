@@ -10,9 +10,9 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private readonly UsuarioService _serviceUsuario;
+        private readonly IUsuarioService _serviceUsuario;
 
-        public UsuarioController(UsuarioService usuarioService)
+        public UsuarioController(IUsuarioService usuarioService)
         {
             _serviceUsuario= usuarioService;
         }

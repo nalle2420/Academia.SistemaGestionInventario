@@ -11,7 +11,7 @@ using Farsiman.Infraestructure.Core.Entity.Standard;
 
 namespace Academia.SistemaGestionInventario.WApi._Features.Sucursales
 {
-    public class SucursalService
+    public class SucursalService: ISucursalService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

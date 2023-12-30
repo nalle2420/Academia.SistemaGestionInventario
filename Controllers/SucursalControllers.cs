@@ -8,8 +8,8 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
     [ApiController]
     public class SucursalController : ControllerBase
     {
-        private readonly SucursalService _serviceSucursal;
-        public SucursalController(SucursalService sucursalService)
+        private readonly ISucursalService _serviceSucursal;
+        public SucursalController(ISucursalService sucursalService)
         {
             _serviceSucursal = sucursalService;
 

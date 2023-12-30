@@ -10,9 +10,9 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
     [ApiController]
     public class SalidaInventarioController : ControllerBase
     {
-        private readonly SalidaInventarioService _serviceSalidaInventario;
+        private readonly ISalidaInventarioService _serviceSalidaInventario;
 
-        public SalidaInventarioController(SalidaInventarioService serviceSalidaInventario)
+        public SalidaInventarioController(ISalidaInventarioService serviceSalidaInventario)
         {
             _serviceSalidaInventario = serviceSalidaInventario;
         }

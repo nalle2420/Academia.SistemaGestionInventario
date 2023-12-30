@@ -8,9 +8,9 @@ namespace Academia.SistemaGestionInventario.WApi.Controllers
     [ApiController]
     public class PermisoController : ControllerBase
     {
-        private readonly PermisoService _servicePermiso;
+        private readonly IPermisoServices _servicePermiso;
 
-        public PermisoController(PermisoService permisoService)
+        public PermisoController(IPermisoServices permisoService)
         {
             _servicePermiso = permisoService;
         }

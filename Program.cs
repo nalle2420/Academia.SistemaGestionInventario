@@ -59,17 +59,17 @@ builder.Services.AddFsAuthService(configureOptions =>
     configureOptions.Password = builder.Configuration.GetFromENV("Configurations:FsIdentityServer:Password");
 });
 
-builder.Services.AddTransient<SucursalService>();
+builder.Services.AddTransient<ISucursalService,SucursalService>();
 builder.Services.AddTransient<GeneralDomain>();
-builder.Services.AddTransient<ProductoLoteService>();
-builder.Services.AddTransient<UsuarioService>();
-builder.Services.AddTransient<ProductoService>();
-builder.Services.AddTransient<SalidaInventarioService>();
-builder.Services.AddTransient<SalidaInventarioDetalleService>();
+builder.Services.AddTransient<IProductoLoteService,ProductoLoteService>();
+builder.Services.AddTransient<IUsuarioService,UsuarioService>();
+builder.Services.AddTransient<IProductoService,ProductoService>();
+builder.Services.AddTransient<ISalidaInventarioService,SalidaInventarioService>();
+builder.Services.AddTransient<ISalidaInventarioDetalleService,SalidaInventarioDetalleService>();
 builder.Services.AddTransient<ProductoLoteDomain>();
 builder.Services.AddTransient<SalidaInventarioDomain>();
 builder.Services.AddTransient<UsuarioDomain>();
-builder.Services.AddTransient<PermisoService>();
+builder.Services.AddTransient<IPermisoServices,PermisoService>();
 
 
 

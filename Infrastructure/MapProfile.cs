@@ -1,4 +1,6 @@
-﻿using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes.Dtos;
+﻿using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes;
+using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes.Dtos;
+using Academia.SistemaGestionInventario.WApi._Features.ProductosLotes.Entities;
 using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Dtos;
 using Academia.SistemaGestionInventario.WApi._Features.SalidasInventario.Entities;
 using Academia.SistemaGestionInventario.WApi._Features.SalidasInventarioDetalle.Entities;
@@ -26,6 +28,13 @@ namespace Academia.SistemaGestionInventario.WApi.Infrastructure
 
             CreateMap<SalidaInventario, SalidaInventarioDto>();
             CreateMap<SalidaInventarioDto, SalidaInventario>();
+            CreateMap<ProductoLoteIngresarDto, ProductosLote>();
+            CreateMap<ProductosLote,ProductoLoteIngresarDto>();
+
+
+            CreateMap<ProductoLoteMostrarDto, ProductosLote>();
+            CreateMap<ProductosLote, ProductoLoteMostrarDto>();
+
 
 
 

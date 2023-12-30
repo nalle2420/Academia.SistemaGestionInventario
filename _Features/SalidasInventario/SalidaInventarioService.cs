@@ -23,18 +23,18 @@ using System.Linq;
 
 namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario
 {
-    public class SalidaInventarioService
+    public class SalidaInventarioService:ISalidaInventarioService
     {
 
         GeneralDomain _generalDomain;
         SalidaInventarioDomain _salidaInventarioDomain;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        SalidaInventarioDetalleService _serviceSalidaDetalle;
+        ISalidaInventarioDetalleService _serviceSalidaDetalle;
 
 
 
-        public SalidaInventarioService(SalidaInventarioDetalleService salidaInventarioDetalleService,UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, SalidaInventarioDomain salidaInventarioDomain, IMapper mapper)
+        public SalidaInventarioService(ISalidaInventarioDetalleService salidaInventarioDetalleService,UnitOfWorkBuilder unitOfWorkBuilder, GeneralDomain generalDomain, SalidaInventarioDomain salidaInventarioDomain, IMapper mapper)
         {
             _generalDomain = generalDomain;
             _unitOfWork = unitOfWorkBuilder.BuilderSistemaGestionInventario();
@@ -252,10 +252,10 @@ namespace Academia.SistemaGestionInventario.WApi._Features.SalidasInventario
             }
         }
 
-        public Sucursal? buscarSucursal(int idSucursal) => _unitOfWork.Repository<Sucursal>().AsQueryable().FirstOrDefault(e => e.SucursalId == idSucursal);
-        public Usuario? buscarUsuario(int idUsuario) => _unitOfWork.Repository<Usuario>().AsQueryable().FirstOrDefault(e => e.UsuarioId == idUsuario);
+        private Sucursal? buscarSucursal(int idSucursal) => _unitOfWork.Repository<Sucursal>().AsQueryable().FirstOrDefault(e => e.SucursalId == idSucursal);
+        private Usuario? buscarUsuario(int idUsuario) => _unitOfWork.Repository<Usuario>().AsQueryable().FirstOrDefault(e => e.UsuarioId == idUsuario);
 
-        public SalidaInventario? buscarSalida(int idSalida) => _unitOfWork.Repository<SalidaInventario>().AsQueryable().FirstOrDefault(e => e.SalidaInventarioId == idSalida);
+        private SalidaInventario? buscarSalida(int idSalida) => _unitOfWork.Repository<SalidaInventario>().AsQueryable().FirstOrDefault(e => e.SalidaInventarioId == idSalida);
 
     }
 }
